@@ -1,61 +1,68 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { SegmentedControl } from '@expo/ui/community/segmented-control';
+import { useEffect } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
+import { MatchList } from '@/components/match-list';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { BottomTabInset, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
+import { BUCKET_LABELS, BUCKET_ORDER, useMatchesStore } from '@/store/use-matches-store';
 
 export default function HomeScreen() {
+  const theme = useTheme();
+
+  const status = useMatchesStore((state) => state.status);
+  const error = useMatchesStore((state) => state.error);
+  const selectedBucket = useMatchesStore((state) => state.selectedBucket);
+  const setSelectedBucket = useMatchesStore((state) => state.setSelectedBucket);
+  const matches = useMatchesStore((state) => state.grouped[state.selectedBucket]);
+  const fetchMatches = useMatchesStore((state) => state.fetchMatches);
+
+  useEffect(() => {
+    fetchMatches();
+  }, [fetchMatches]);
+
   return (
     <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+        <ThemedText type="subtitle" style={styles.title}>
+          World Cup 2026
         </ThemedText>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+        <SegmentedControl
+          values={BUCKET_ORDER.map((bucket) => BUCKET_LABELS[bucket])}
+          selectedIndex={BUCKET_ORDER.indexOf(selectedBucket)}
+          onChange={(event) =>
+            setSelectedBucket(BUCKET_ORDER[event.nativeEvent.selectedSegmentIndex])
+          }
+          tintColor={theme.backgroundSelected}
+          style={styles.segmented}
+        />
 
-        {Platform.OS === 'web' && <WebBadge />}
+        <View style={styles.body}>
+          {status === 'loading' ? (
+            <View style={styles.center}>
+              <ActivityIndicator />
+            </View>
+          ) : status === 'error' ? (
+            <View style={styles.center}>
+              <ThemedText themeColor="textSecondary" style={styles.errorText}>
+                {error ?? 'Could not load matches.'}
+              </ThemedText>
+              <Pressable
+                onPress={fetchMatches}
+                style={({ pressed }) => pressed && styles.pressed}>
+                <ThemedView type="backgroundElement" style={styles.retryButton}>
+                  <ThemedText type="smallBold">Try again</ThemedText>
+                </ThemedView>
+              </Pressable>
+            </View>
+          ) : (
+            <MatchList matches={matches} bottomInset={BottomTabInset + Spacing.four} />
+          )}
+        </View>
       </SafeAreaView>
     </ThemedView>
   );
@@ -64,35 +71,37 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
+    paddingHorizontal: Spacing.three,
     gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
   },
   title: {
+    paddingTop: Spacing.two,
+  },
+  segmented: {
+    width: '100%',
+  },
+  body: {
+    flex: 1,
+  },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.three,
+    paddingBottom: Spacing.six,
+  },
+  errorText: {
     textAlign: 'center',
   },
-  code: {
-    textTransform: 'uppercase',
+  retryButton: {
+    paddingHorizontal: Spacing.four,
+    paddingVertical: Spacing.two,
+    borderRadius: Spacing.five,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  pressed: {
+    opacity: 0.7,
   },
 });
