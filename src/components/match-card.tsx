@@ -35,22 +35,16 @@ function TeamRow({
 export function MatchCard({ match }: { match: Match }) {
   const scoreLabel = match.hasScore
     ? `${match.score.home} - ${match.score.away}`
-    : "vs";
+    : "0 - 0";
 
   return (
     <ThemedView type="backgroundElement" style={styles.card}>
       <View style={styles.teams}>
         <TeamRow team={match.home} alignment="flex-start" />
         <View style={styles.meta}>
-          {match.hasScore ? (
-            <ThemedText type="default" style={styles.score}>
-              {scoreLabel}
-            </ThemedText>
-          ) : (
-            <ThemedText type="small" themeColor="textSecondary">
-              {scoreLabel}
-            </ThemedText>
-          )}
+          <ThemedText type="default" style={styles.score}>
+            {scoreLabel}
+          </ThemedText>
           <ThemedText type="smallBold">{match.kickoffTime}</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
             {match.group} 组

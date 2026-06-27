@@ -15,11 +15,10 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="theme-color" content="#208AEF" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="世界杯赛程" />
+        <meta name="apple-mobile-web-app-title" content="Sport" />
         <meta name="description" content="世界杯赛程与比分追踪" />
 
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" href="/icon-192.png" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
 
         <ScrollViewStyleReset />
