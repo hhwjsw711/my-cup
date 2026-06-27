@@ -6,17 +6,17 @@ import {
   TabTriggerSlotProps,
   TabListProps,
 } from 'expo-router/ui';
-import { Pressable, View, StyleSheet } from 'react-native';
+import { Pressable, View, StyleSheet, useColorScheme } from 'react-native';
 
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
 
-import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 
 export default function AppTabs() {
   return (
-    <Tabs>
-      <TabSlot style={{ height: '100%' }} />
+    <Tabs style={{ flex: 1 }}>
+      <TabSlot style={{ flex: 1 }} />
       <TabList asChild>
         <CustomTabList>
           <TabTrigger name="home" href="/" asChild>
@@ -46,8 +46,12 @@ export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps
 }
 
 export function CustomTabList(props: TabListProps) {
+  const scheme = useColorScheme();
+  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme ?? 'light'];
   return (
-    <View {...props} style={styles.tabListContainer}>
+    <View
+      {...props}
+      style={[styles.tabListContainer, { backgroundColor: colors.background }]}>
       <ThemedView type="backgroundElement" style={styles.innerContainer}>
         {props.children}
       </ThemedView>
@@ -58,6 +62,7 @@ export function CustomTabList(props: TabListProps) {
 const styles = StyleSheet.create({
   tabListContainer: {
     position: 'absolute',
+    bottom: 0,
     width: '100%',
     padding: Spacing.three,
     justifyContent: 'center',

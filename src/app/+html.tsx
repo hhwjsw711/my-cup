@@ -22,6 +22,11 @@ export default function Root({ children }: PropsWithChildren) {
         <link rel="apple-touch-icon" href="/icon-192.png" />
 
         <ScrollViewStyleReset />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: 'html, body, #root { height: 100%; display: flex; flex-direction: column; }',
+          }}
+        />
       </head>
       <body>{children}</body>
     </html>
