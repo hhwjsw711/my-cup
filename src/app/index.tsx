@@ -35,15 +35,17 @@ export default function HomeScreen() {
             2026 世界杯
           </ThemedText>
 
-          <SegmentedControl
-            values={BUCKET_ORDER.map((bucket) => BUCKET_LABELS[bucket])}
-            selectedIndex={BUCKET_ORDER.indexOf(selectedBucket)}
-            onChange={(event) =>
-              setSelectedBucket(BUCKET_ORDER[event.nativeEvent.selectedSegmentIndex])
-            }
-            tintColor="#208AEF"
-            style={styles.segmented}
-          />
+          <ThemedView type="backgroundElement" style={styles.segmentedWrap}>
+            <SegmentedControl
+              values={BUCKET_ORDER.map((bucket) => BUCKET_LABELS[bucket])}
+              selectedIndex={BUCKET_ORDER.indexOf(selectedBucket)}
+              onChange={(event) =>
+                setSelectedBucket(BUCKET_ORDER[event.nativeEvent.selectedSegmentIndex])
+              }
+              tintColor="#208AEF"
+              style={styles.segmented}
+            />
+          </ThemedView>
 
           <View style={styles.body}>
             {status === 'loading' ? (
@@ -84,6 +86,10 @@ const styles = StyleSheet.create({
   },
   title: {
     paddingTop: Spacing.two,
+  },
+  segmentedWrap: {
+    borderRadius: Spacing.three,
+    overflow: 'hidden',
   },
   segmented: {
     width: '100%',
