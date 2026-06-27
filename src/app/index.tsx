@@ -1,4 +1,3 @@
-import { SegmentedControl } from '@expo/ui/community/segmented-control';
 import Head from 'expo-router/head';
 import { useEffect } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
@@ -8,12 +7,35 @@ import { MatchList } from '@/components/match-list';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
 import { BUCKET_LABELS, BUCKET_ORDER, useMatchesStore } from '@/store/use-matches-store';
 
-export default function HomeScreen() {
-  const theme = useTheme();
+function BucketPill({
+  label,
+  selected,
+  onPress,
+}: {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => pressed && styles.pressed}>
+      <ThemedView
+        type={selected ? 'backgroundSelected' : 'backgroundElement'}
+        style={styles.pill}>
+        <ThemedText
+          type={selected ? 'smallBold' : 'small'}
+          themeColor={selected ? 'text' : 'textSecondary'}>
+          {label}
+        </ThemedText>
+      </ThemedView>
+    </Pressable>
+  );
+}
 
+export default function HomeScreen() {
   const status = useMatchesStore((state) => state.status);
   const error = useMatchesStore((state) => state.error);
   const selectedBucket = useMatchesStore((state) => state.selectedBucket);
@@ -37,15 +59,18 @@ export default function HomeScreen() {
             2026 世界杯
           </ThemedText>
 
-          <SegmentedControl
-            values={BUCKET_ORDER.map((bucket) => BUCKET_LABELS[bucket])}
-            selectedIndex={BUCKET_ORDER.indexOf(selectedBucket)}
-            onChange={(event) =>
-              setSelectedBucket(BUCKET_ORDER[event.nativeEvent.selectedSegmentIndex])
-            }
-            tintColor={theme.backgroundSelected}
-            style={styles.segmented}
-          />
+          <ThemedView type="backgroundElement" style={styles.pillBar}>
+            <View style={styles.pillRow}>
+              {BUCKET_ORDER.map((bucket) => (
+                <BucketPill
+                  key={bucket}
+                  label={BUCKET_LABELS[bucket]}
+                  selected={selectedBucket === bucket}
+                  onPress={() => setSelectedBucket(bucket)}
+                />
+              ))}
+            </View>
+          </ThemedView>
 
           <View style={styles.body}>
             {status === 'loading' ? (
@@ -87,8 +112,22 @@ const styles = StyleSheet.create({
   title: {
     paddingTop: Spacing.two,
   },
-  segmented: {
-    width: '100%',
+  pillBar: {
+    padding: Spacing.half,
+    borderRadius: Spacing.five,
+    flexDirection: 'row',
+  },
+  pillRow: {
+    flexDirection: 'row',
+    gap: Spacing.two,
+    flex: 1,
+  },
+  pill: {
+    flex: 1,
+    paddingVertical: Spacing.two,
+    borderRadius: Spacing.five,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   body: {
     flex: 1,
