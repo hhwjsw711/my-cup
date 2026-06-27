@@ -43,7 +43,7 @@ export default function HomeScreen() {
             onChange={(event) =>
               setSelectedBucket(BUCKET_ORDER[event.nativeEvent.selectedSegmentIndex])
             }
-            tintColor={theme.backgroundSelected}
+            tintColor={theme.backgroundElement}
             style={styles.segmented}
           />
 
