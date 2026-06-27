@@ -8,11 +8,9 @@ import { MatchList } from '@/components/match-list';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
 import { BUCKET_LABELS, BUCKET_ORDER, useMatchesStore } from '@/store/use-matches-store';
 
 export default function HomeScreen() {
-  const theme = useTheme();
 
   const status = useMatchesStore((state) => state.status);
   const error = useMatchesStore((state) => state.error);
@@ -43,7 +41,7 @@ export default function HomeScreen() {
             onChange={(event) =>
               setSelectedBucket(BUCKET_ORDER[event.nativeEvent.selectedSegmentIndex])
             }
-            tintColor={theme.backgroundElement}
+            tintColor="#208AEF"
             style={styles.segmented}
           />
 

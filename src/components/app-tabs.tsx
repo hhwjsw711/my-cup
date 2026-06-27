@@ -10,8 +10,8 @@ export default function AppTabs() {
   return (
     <NativeTabs
       backgroundColor={colors.background}
-      indicatorColor={colors.backgroundElement}
-      labelStyle={{ selected: { color: colors.text } }}>
+      indicatorColor="#208AEF"
+      labelStyle={{ selected: { color: '#208AEF' } }}>
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Label>世界杯</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon

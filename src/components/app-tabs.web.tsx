@@ -7,6 +7,7 @@ import {
   TabListProps,
 } from 'expo-router/ui';
 import { Pressable, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
@@ -35,9 +36,12 @@ export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps
   return (
     <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
       <ThemedView
-        type={isFocused ? 'backgroundSelected' : 'backgroundElement'}
-        style={styles.tabButtonView}>
-        <ThemedText type="small" themeColor={isFocused ? 'text' : 'textSecondary'}>
+        type={isFocused ? undefined : 'backgroundElement'}
+        style={[styles.tabButtonView, isFocused && styles.tabSelected]}>
+        <ThemedText
+          type={isFocused ? 'smallBold' : 'small'}
+          style={isFocused && { color: '#ffffff' }}
+          themeColor={isFocused ? undefined : 'textSecondary'}>
           {children}
         </ThemedText>
       </ThemedView>
@@ -46,8 +50,12 @@ export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps
 }
 
 export function CustomTabList(props: TabListProps) {
+  const insets = useSafeAreaInsets();
   return (
-    <ThemedView type="background" {...props} style={styles.tabListContainer}>
+    <ThemedView
+      type="background"
+      {...props}
+      style={[styles.tabListContainer, { paddingBottom: insets.bottom + Spacing.two }]}>
       <ThemedView type="backgroundElement" style={styles.innerContainer}>
         {props.children}
       </ThemedView>
@@ -84,5 +92,8 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.one,
     paddingHorizontal: Spacing.three,
     borderRadius: Spacing.three,
+  },
+  tabSelected: {
+    backgroundColor: '#208AEF',
   },
 });
