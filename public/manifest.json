@@ -1,7 +1,7 @@
 {
-  "name": "Sport",
+  "name": "Sport — 世界杯赛程",
   "short_name": "Sport",
-  "description": "FIFA World Cup 2026 match tracker — past, today, and upcoming matches with live scores",
+  "description": "2026 世界杯赛程追踪，实时比分，已结束、今天、即将开始的比赛",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

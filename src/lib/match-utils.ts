@@ -33,12 +33,11 @@ export function getMatchBucket(kickoff: Date, now: Date = new Date()): MatchBuck
   return diffDays < 0 ? 'past' : 'upcoming';
 }
 
-/** Format a 24h date into a friendly 12h time, e.g. "1:00 PM". */
+/** Format a 24h date to Chinese 24h time, e.g. "14:00". */
 function formatKickoffTime(date: Date): string {
+  const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
-  const period = date.getHours() >= 12 ? 'PM' : 'AM';
-  const hours = date.getHours() % 12 || 12;
-  return `${hours}:${minutes} ${period}`;
+  return `${hours}:${minutes}`;
 }
 
 /** Build an id → Team lookup so we can join matches with their teams. */
@@ -57,7 +56,7 @@ export function indexTeamsById(teams: RawTeam[]): Map<string, Team> {
 
 /** Knockout matches can reference teams that aren't decided yet. */
 function resolveTeam(id: string, teams: Map<string, Team>): Team {
-  return teams.get(id) ?? { id, name: 'TBD', fifaCode: '', flag: '' };
+  return teams.get(id) ?? { id, name: '待定', fifaCode: '', flag: '' };
 }
 
 /** Join a raw match with team data and compute its display fields + bucket. */

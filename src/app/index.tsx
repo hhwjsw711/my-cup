@@ -28,13 +28,13 @@ export default function HomeScreen() {
   return (
     <>
       <Head>
-        <title>Sport</title>
-        <meta name="description" content="FIFA World Cup 2026 match tracker — past, today, and upcoming matches with live scores" />
+        <title>Sport — 世界杯赛程</title>
+        <meta name="description" content="2026 世界杯赛程追踪，已结束、今天、即将开始的比赛实时比分" />
       </Head>
       <ThemedView style={styles.container}>
         <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
           <ThemedText type="subtitle" style={styles.title}>
-            World Cup 2026
+            2026 世界杯
           </ThemedText>
 
           <SegmentedControl
@@ -55,13 +55,13 @@ export default function HomeScreen() {
             ) : status === 'error' ? (
               <View style={styles.center}>
                 <ThemedText themeColor="textSecondary" style={styles.errorText}>
-                  {error ?? 'Could not load matches.'}
+                  {error ?? '加载失败，请检查网络'}
                 </ThemedText>
                 <Pressable
                   onPress={fetchMatches}
                   style={({ pressed }) => pressed && styles.pressed}>
                   <ThemedView type="backgroundElement" style={styles.retryButton}>
-                    <ThemedText type="smallBold">Try again</ThemedText>
+                    <ThemedText type="smallBold">重试</ThemedText>
                   </ThemedView>
                 </Pressable>
               </View>

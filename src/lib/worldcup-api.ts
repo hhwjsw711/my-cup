@@ -20,7 +20,7 @@ const TEAMS_URL = `${API_BASE}/get/teams`;
 async function getJson<T>(url: string): Promise<T> {
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Request failed (${response.status}) for ${url}`);
+    throw new Error(`请求失败 (${response.status}) — ${url}`);
   }
   return (await response.json()) as T;
 }

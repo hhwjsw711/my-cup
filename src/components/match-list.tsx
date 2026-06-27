@@ -15,7 +15,7 @@ export function MatchList({
   if (matches.length === 0) {
     return (
       <View style={styles.empty}>
-        <ThemedText themeColor="textSecondary">No matches for this day.</ThemedText>
+        <ThemedText themeColor="textSecondary">当天暂无比赛</ThemedText>
       </View>
     );
   }

@@ -47,7 +47,7 @@ export function MatchCard({ match }: { match: Match }) {
           </ThemedText>
           <ThemedText type="smallBold">{match.kickoffTime}</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
-            Group {match.group}
+            {match.group} 组
           </ThemedText>
         </View>
         <TeamRow team={match.away} alignment="flex-end" />
