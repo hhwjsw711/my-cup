@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    gap: Spacing.two,
-    paddingTop: Spacing.two,
+    gap: Spacing.three,
+    paddingTop: Spacing.three,
   },
   empty: {
     flex: 1,

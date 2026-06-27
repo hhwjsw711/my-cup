@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
   },
   segmented: {
     width: '100%',
+    minHeight: 36,
   },
   body: {
     flex: 1,

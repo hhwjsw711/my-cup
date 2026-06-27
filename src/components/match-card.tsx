@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { FlexAlignType, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -8,10 +8,8 @@ import { Match, Team } from "@/types/match";
 
 function TeamRow({
   team,
-  alignment,
 }: {
   team: Team;
-  alignment: FlexAlignType | undefined;
 }) {
   return (
     <View style={[styles.teamRow, { alignItems: "center" }]}>
@@ -35,12 +33,12 @@ function TeamRow({
 export function MatchCard({ match }: { match: Match }) {
   const scoreLabel = match.hasScore
     ? `${match.score.home} - ${match.score.away}`
-    : "0 - 0";
+    : "vs";
 
   return (
     <ThemedView type="backgroundElement" style={styles.card}>
       <View style={styles.teams}>
-        <TeamRow team={match.home} alignment="flex-start" />
+        <TeamRow team={match.home} />
         <View style={styles.meta}>
           <ThemedText type="default" style={styles.score}>
             {scoreLabel}
@@ -50,7 +48,7 @@ export function MatchCard({ match }: { match: Match }) {
             {match.group} 组
           </ThemedText>
         </View>
-        <TeamRow team={match.away} alignment="flex-end" />
+        <TeamRow team={match.away} />
       </View>
     </ThemedView>
   );
