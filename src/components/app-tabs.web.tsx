@@ -20,10 +20,10 @@ export default function AppTabs() {
       <TabList asChild>
         <CustomTabList>
           <TabTrigger name="home" href="/" asChild>
-            <TabButton>Matches</TabButton>
+            <TabButton>世界杯</TabButton>
           </TabTrigger>
           <TabTrigger name="explore" href="/explore" asChild>
-            <TabButton>CBA</TabButton>
+            <TabButton>浙BA</TabButton>
           </TabTrigger>
         </CustomTabList>
       </TabList>
