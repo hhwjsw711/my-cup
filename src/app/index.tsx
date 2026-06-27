@@ -1,6 +1,6 @@
 import { SegmentedControl } from '@expo/ui/community/segmented-control';
 import Head from 'expo-router/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,12 +10,33 @@ import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, Spacing } from '@/constants/theme';
 import { BUCKET_LABELS, BUCKET_ORDER, useMatchesStore } from '@/store/use-matches-store';
 
-export default function HomeScreen() {
-
-  const status = useMatchesStore((state) => state.status);
-  const error = useMatchesStore((state) => state.error);
+function BucketSegments() {
+  const [mounted, setMounted] = useState(false);
   const selectedBucket = useMatchesStore((state) => state.selectedBucket);
   const setSelectedBucket = useMatchesStore((state) => state.setSelectedBucket);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return <ThemedView type="backgroundElement" style={styles.segmentedPh} />;
+  }
+
+  return (
+    <SegmentedControl
+      values={BUCKET_ORDER.map((bucket) => BUCKET_LABELS[bucket])}
+      selectedIndex={BUCKET_ORDER.indexOf(selectedBucket)}
+      onChange={(event) =>
+        setSelectedBucket(BUCKET_ORDER[event.nativeEvent.selectedSegmentIndex])
+      }
+      tintColor="#208AEF"
+      style={styles.segmented}
+    />
+  );
+}
+
+export default function HomeScreen() {
+  const status = useMatchesStore((state) => state.status);
+  const error = useMatchesStore((state) => state.error);
   const matches = useMatchesStore((state) => state.grouped[state.selectedBucket]);
   const fetchMatches = useMatchesStore((state) => state.fetchMatches);
 
@@ -35,17 +56,7 @@ export default function HomeScreen() {
             2026 世界杯
           </ThemedText>
 
-          <ThemedView type="backgroundElement" style={styles.segmentedWrap}>
-            <SegmentedControl
-              values={BUCKET_ORDER.map((bucket) => BUCKET_LABELS[bucket])}
-              selectedIndex={BUCKET_ORDER.indexOf(selectedBucket)}
-              onChange={(event) =>
-                setSelectedBucket(BUCKET_ORDER[event.nativeEvent.selectedSegmentIndex])
-              }
-              tintColor="#208AEF"
-              style={styles.segmented}
-            />
-          </ThemedView>
+          <BucketSegments />
 
           <View style={styles.body}>
             {status === 'loading' ? (
@@ -87,9 +98,10 @@ const styles = StyleSheet.create({
   title: {
     paddingTop: Spacing.two,
   },
-  segmentedWrap: {
+  segmentedPh: {
+    height: 36,
+    width: '100%',
     borderRadius: Spacing.three,
-    overflow: 'hidden',
   },
   segmented: {
     width: '100%',
