@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     paddingHorizontal: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.four,
+    paddingBottom: BottomTabInset,
   },
   center: {
     flex: 1,

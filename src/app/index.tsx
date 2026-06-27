@@ -66,7 +66,7 @@ export default function HomeScreen() {
                 </Pressable>
               </View>
             ) : (
-              <MatchList matches={matches} bottomInset={BottomTabInset + Spacing.four} />
+              <MatchList matches={matches} bottomInset={BottomTabInset} />
             )}
           </View>
         </SafeAreaView>
