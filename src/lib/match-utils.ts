@@ -3,15 +3,41 @@ import { Match, MatchBucket, RawMatch, RawTeam, Team } from '@/types/match';
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 /**
- * Parse the API's `MM/DD/YYYY HH:mm` local date into a `Date`.
- * We parse the parts by hand because `new Date(string)` is unreliable across
- * JS engines (notably Hermes) for non-ISO formats.
+ * Venue UTC offsets for June–July 2026 (summer DST in US/Canada).
+ * Mexico abolished DST in 2022, so its cities stay at UTC-6 year-round.
  */
-export function parseLocalDate(localDate: string): Date {
+const VENUE_UTC_OFFSETS: Record<string, number> = {
+  '1': -6,  // Mexico City (CST)
+  '2': -6,  // Guadalajara (CST)
+  '3': -6,  // Monterrey (CST)
+  '4': -5,  // Dallas (CDT)
+  '5': -5,  // Houston (CDT)
+  '6': -5,  // Kansas City (CDT)
+  '7': -4,  // Atlanta (EDT)
+  '8': -4,  // Miami (EDT)
+  '9': -4,  // Boston (EDT)
+  '10': -4, // Philadelphia (EDT)
+  '11': -4, // New York/New Jersey (EDT)
+  '12': -4, // Toronto (EDT)
+  '13': -7, // Vancouver (PDT)
+  '14': -7, // Seattle (PDT)
+  '15': -7, // San Francisco Bay Area (PDT)
+  '16': -7, // Los Angeles (PDT)
+};
+
+/**
+ * Parse the API's `MM/DD/YYYY HH:mm` venue-local date into a UTC-based `Date`.
+ *
+ * The API returns the kickoff in the **venue's local time** (e.g. 21:00 in
+ * Vancouver = UTC-7). We convert to UTC so that bucketing (past / today /
+ * upcoming) and display formatting use the device's local timezone via
+ * `getHours()` / `getMinutes()` / `startOfDay()`.
+ */
+export function parseLocalDate(localDate: string, venueUtcOffset: number): Date {
   const [datePart, timePart = '00:00'] = localDate.trim().split(' ');
   const [month, day, year] = datePart.split('/').map(Number);
   const [hours, minutes] = timePart.split(':').map(Number);
-  return new Date(year, month - 1, day, hours, minutes);
+  return new Date(Date.UTC(year, month - 1, day, hours - venueUtcOffset, minutes));
 }
 
 /** Midnight (local) for a given date — lets us compare calendar days. */
@@ -61,7 +87,8 @@ function resolveTeam(id: string, teams: Map<string, Team>): Team {
 
 /** Join a raw match with team data and compute its display fields + bucket. */
 export function enrichMatch(raw: RawMatch, teams: Map<string, Team>, now: Date): Match {
-  const kickoff = parseLocalDate(raw.local_date);
+  const venueOffset = VENUE_UTC_OFFSETS[raw.stadium_id] ?? 0;
+  const kickoff = parseLocalDate(raw.local_date, venueOffset);
   const hasScore =
     raw.finished === 'TRUE' || raw.time_elapsed === 'live' || raw.time_elapsed === 'finished';
   return {
