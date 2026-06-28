@@ -47,12 +47,12 @@ export function CityDropdown() {
         animationType="fade"
         onRequestClose={() => setVisible(false)}>
         <Pressable style={styles.overlay} onPress={() => setVisible(false)}>
-          <View style={[styles.sheet, { paddingBottom: insets.bottom + Spacing.three }]}>
+          <View style={[styles.sheet, { paddingBottom: insets.bottom + Spacing.five }]}>
             <ThemedView type="backgroundElement" style={styles.sheetInner}>
               <FlatList
                 data={cities}
                 keyExtractor={(item) => item}
-                contentContainerStyle={{ paddingBottom: Spacing.three }}
+                contentContainerStyle={{ paddingBottom: Spacing.four }}
                 renderItem={({ item }) => (
                   <Pressable
                     onPress={() => handleSelect(item)}
