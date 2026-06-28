@@ -62,7 +62,7 @@ export function ZJBAMatchCard({
           </ThemedText>
         </View>
         <View style={styles.scoreBox}>
-          <ThemedText type="default" style={styles.score}>
+          <ThemedText type="default" style={styles.score} numberOfLines={1}>
             {scoreLabel}
           </ThemedText>
           <ThemedText type="smallBold">{match.kickoffTime}</ThemedText>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   scoreBox: {
-    width: 64,
+    width: 72,
     alignItems: 'center',
     gap: Spacing.one - 1,
   },

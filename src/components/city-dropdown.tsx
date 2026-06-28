@@ -52,6 +52,7 @@ export function CityDropdown() {
               <FlatList
                 data={cities}
                 keyExtractor={(item) => item}
+                contentContainerStyle={{ paddingBottom: Spacing.three }}
                 renderItem={({ item }) => (
                   <Pressable
                     onPress={() => handleSelect(item)}
