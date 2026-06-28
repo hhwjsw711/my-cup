@@ -47,7 +47,7 @@ export function CityDropdown() {
         animationType="fade"
         onRequestClose={() => setVisible(false)}>
         <Pressable style={styles.overlay} onPress={() => setVisible(false)}>
-          <View style={[styles.sheet, { paddingBottom: insets.bottom + Spacing.five }]}>
+          <View style={[styles.sheet, { paddingBottom: Platform.OS === 'web' ? Spacing.six : insets.bottom + Spacing.five }]}>
             <ThemedView type="backgroundElement" style={styles.sheetInner}>
               <FlatList
                 data={cities}
