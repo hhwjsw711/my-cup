@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { FlatList, Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -12,7 +11,6 @@ export function CityDropdown() {
   const cities = useZJBAStore((s) => s.cities);
   const selectedCity = useZJBAStore((s) => s.selectedCity);
   const setSelectedCity = useZJBAStore((s) => s.setSelectedCity);
-  const insets = useSafeAreaInsets();
 
   const handleSelect = (city: string) => {
     setSelectedCity(city);
@@ -47,12 +45,12 @@ export function CityDropdown() {
         animationType="fade"
         onRequestClose={() => setVisible(false)}>
         <Pressable style={styles.overlay} onPress={() => setVisible(false)}>
-          <View style={[styles.sheet, { paddingBottom: Platform.OS === 'web' ? Spacing.six : insets.bottom + Spacing.five }]}>
-            <ThemedView type="backgroundElement" style={styles.sheetInner}>
+          <Pressable onPress={(e) => e.stopPropagation()}>
+            <ThemedView type="backgroundElement" style={styles.dialog}>
               <FlatList
                 data={cities}
                 keyExtractor={(item) => item}
-                contentContainerStyle={{ paddingBottom: Spacing.four }}
+                style={{ maxHeight: 360 }}
                 renderItem={({ item }) => (
                   <Pressable
                     onPress={() => handleSelect(item)}
@@ -73,7 +71,7 @@ export function CityDropdown() {
                 )}
               />
             </ThemedView>
-          </View>
+          </Pressable>
         </Pressable>
       </Modal>
     </>
@@ -96,15 +94,15 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: '#00000066',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.four,
   },
-  sheet: {
-    maxHeight: '60%',
-  },
-  sheetInner: {
-    borderTopLeftRadius: Spacing.three,
-    borderTopRightRadius: Spacing.three,
-    padding: Spacing.three,
+  dialog: {
+    width: 240,
+    maxHeight: '70%',
+    borderRadius: Spacing.three,
+    padding: Spacing.two,
   },
   option: {
     flexDirection: 'row',
